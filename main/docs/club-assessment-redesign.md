@@ -33,4 +33,7 @@
 - src/features/assessment/narrative.ts：任务叙事与触发规则
 - src/features/scoring/evidence-extractor.ts：行为证据
 - src/features/scoring/proficiency-levels.ts：等级描述
-- src/app/assessment-enhancements.css：任务、问卷、报告的统一样式
+- src/app/workspace-desktop.css：参考图驱动的四栏工作台与浏览器窗口样式
+- src/app/assessment-support.css：问卷与反馈样式
+- src/components/assessment/documents/：四种任务编辑器
+- src/features/assessment/browser-navigation.ts：浏览器历史与前进／后退

@@ -2,18 +2,17 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { getSceneConfig } from '../../features/assessment/scene-config'
+import { clubTasks } from '../../features/assessment/narrative'
 import { getAllowedRoute, hasQuestionnaire } from '../../features/assessment/session-guards'
 import { useAssessmentStore } from '../../features/assessment/session-store'
 import type { SceneSubmission } from '../../features/assessment/types'
-import { TaskOneFlow } from './task-one-flow'
-import { TaskTwoFlow } from './task-two-flow'
-import { TaskThreeFlow } from './task-three-flow'
-import { TaskFourFlow } from './task-four-flow'
+import { SceneDesktop } from './scene-desktop'
+import { findBrowserSource, validateCitation } from '../../features/assessment/browser-sources'
+import type { SourceCitation } from '../../features/assessment/types'
 
 export function AssessmentClient({ step }: { step: number }) {
   const router = useRouter()
-  const config = getSceneConfig(step)
+  const config = clubTasks[step - 1]
   const session = useAssessmentStore((state) => state.session)
   const hydrated = useAssessmentStore((state) => state.hydrated)
   const startSession = useAssessmentStore((state) => state.startSession)
@@ -28,7 +27,10 @@ export function AssessmentClient({ step }: { step: number }) {
     startSession()
     if (!session || !hasQuestionnaire(session, 'pre')) return
     const allowed = getAllowedRoute(session)
-    if (allowed !== `/assessment/${step}`) { router.replace(allowed); return }
+    if (allowed !== `/assessment/${step}`) {
+      router.replace(allowed)
+      return
+    }
     startScene(config.id)
   }, [config, hydrated, router, session, step, startScene, startSession])
 
@@ -37,32 +39,41 @@ export function AssessmentClient({ step }: { step: number }) {
   }, [router, session, step])
 
   if (!config || !hydrated) return <main className="feedback-loading">正在读取进度…</main>
-  if (!session || !hasQuestionnaire(session, 'pre') || getAllowedRoute(session) !== `/assessment/${step}`) return <main className="feedback-loading">正在读取进度…</main>
+  if (
+    !session ||
+    !hasQuestionnaire(session, 'pre') ||
+    getAllowedRoute(session) !== `/assessment/${step}`
+  )
+    return <main className="feedback-loading">正在读取进度…</main>
   const scene = session?.scenes[config.id]
 
   if (!scene) return <main className="feedback-loading">正在准备任务…</main>
 
   const finish = (submission: SceneSubmission) => {
-    recordEvent(config.id, 'submission_completed', { submission })
-    submitScene(config.id, submission)
+    const citations = Array.isArray(scene.draft.citations)
+      ? (scene.draft.citations as SourceCitation[]).filter(
+          (citation) =>
+            validateCitation(citation) &&
+            (findBrowserSource(citation.sourceId)?.sceneId ?? 'headphones') === config.id,
+        )
+      : []
+    const result = { ...submission, citations }
+    recordEvent(config.id, 'submission_completed', { submission: result })
+    submitScene(config.id, result)
     router.push(step === 4 ? '/questionnaire/post' : `/assessment/${step + 1}`)
   }
 
-  if (config.id === 'headphones') {
-    return <TaskOneFlow draft={scene.draft} messages={scene.messages} updateDraft={(patch) => updateDraft(config.id, patch)} recordEvent={(type, payload) => recordEvent(config.id, type, payload)} appendMessage={(message) => appendMessage(config.id, message)} submit={finish} />
-  }
-
-  if (config.id === 'trip') {
-    return <TaskTwoFlow draft={scene.draft} messages={scene.messages} updateDraft={(patch) => updateDraft(config.id, patch)} recordEvent={(type, payload) => recordEvent(config.id, type, payload)} appendMessage={(message) => appendMessage(config.id, message)} submit={finish} />
-  }
-
-  if (config.id === 'report') {
-    return <TaskThreeFlow draft={scene.draft} messages={scene.messages} updateDraft={(patch) => updateDraft(config.id, patch)} recordEvent={(type, payload) => recordEvent(config.id, type, payload)} appendMessage={(message) => appendMessage(config.id, message)} submit={finish} />
-  }
-
-  if (config.id === 'internship') {
-    return <TaskFourFlow draft={scene.draft} messages={scene.messages} updateDraft={(patch) => updateDraft(config.id, patch)} recordEvent={(type, payload) => recordEvent(config.id, type, payload)} appendMessage={(message) => appendMessage(config.id, message)} submit={finish} />
-  }
-
-  return <main className="feedback-loading">正在准备任务…</main>
+  return (
+    <SceneDesktop
+      key={config.id}
+      current={step}
+      sceneId={config.id}
+      draft={scene.draft}
+      messages={scene.messages}
+      updateDraft={(patch) => updateDraft(config.id, patch)}
+      recordEvent={(type, payload) => recordEvent(config.id, type, payload)}
+      appendMessage={(message) => appendMessage(config.id, message)}
+      submit={finish}
+    />
+  )
 }

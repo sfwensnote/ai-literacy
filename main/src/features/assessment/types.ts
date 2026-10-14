@@ -1,10 +1,6 @@
 export type SceneId = 'headphones' | 'trip' | 'report' | 'internship'
 
-export type Dimension =
-  | 'information_judgement'
-  | 'ai_use'
-  | 'ai_evaluation'
-  | 'ai_responsibility'
+export type Dimension = 'information_judgement' | 'ai_use' | 'ai_evaluation' | 'ai_responsibility'
 
 export type MessageRole = 'assistant' | 'user'
 
@@ -63,19 +59,18 @@ export interface ItineraryItem {
   detail: string
 }
 
-export type TaskOnePhase = 'initial' | 'verifying' | 'final_decision'
+export type TaskOnePhase = 'initial' | 'final_decision'
 
 export interface TaskOneDraft {
   phase: TaskOnePhase
   selectedClaims: string[]
   initialSelectedClaims: string[]
   trustAll: boolean
-  aiOpen: boolean
   decision?: HeadphoneSubmission['decision']
   reason: string
 }
 
-export type TaskTwoPhase = 'initial' | 'editing' | 'ai_assist' | 'confirm'
+export type TaskTwoPhase = 'initial' | 'editing' | 'confirm'
 
 export interface TaskTwoDraft {
   phase: TaskTwoPhase
@@ -86,6 +81,7 @@ export interface TaskTwoDraft {
 }
 
 export interface TripSubmission {
+  citations?: SourceCitation[]
   saturday: string
   sunday: string
   checklist: string[]
@@ -95,6 +91,7 @@ export interface TripSubmission {
 }
 
 export interface ReportSubmission {
+  citations?: SourceCitation[]
   title: string
   body: string
   keepItems: string[]
@@ -106,7 +103,7 @@ export interface ReportDocument {
   body: string
 }
 
-export type TaskThreePhase = 'initial' | 'editing' | 'ai_assist' | 'confirm'
+export type TaskThreePhase = 'initial' | 'editing' | 'confirm'
 
 export interface TaskThreeDraft {
   phase: TaskThreePhase
@@ -120,6 +117,7 @@ export interface TaskThreeDraft {
 }
 
 export interface InternshipSubmission {
+  citations?: SourceCitation[]
   sharedInfo: string[]
   ratings: { match: number; growth: number; pressure: number }
   priorities: string[]
@@ -127,7 +125,7 @@ export interface InternshipSubmission {
   reason: string
 }
 
-export type TaskFourPhase = 'initial' | 'ai_assist' | 'decision' | 'confirm'
+export type TaskFourPhase = 'initial' | 'decision' | 'confirm'
 
 export interface TaskFourDraft {
   phase: TaskFourPhase

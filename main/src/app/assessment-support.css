@@ -1,0 +1,419 @@
+:root {
+  --font-title:
+    'Source Han Serif SC', '思源宋体', 'Noto Serif CJK SC', 'Noto Serif SC', 'SimSun', '宋体', serif;
+  --font-body:
+    'PingFang SC', 'Source Han Sans SC', '思源黑体', 'Noto Sans CJK SC', 'Microsoft YaHei',
+    sans-serif;
+}
+:is(.questionnaire-page, .feedback-page, .analyzing-page) {
+  --blue-600: #2479ff;
+  --blue-700: #125fdd;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #203d63;
+  background: #f1f7ff;
+}
+:is(.questionnaire-page, .feedback-page, .analyzing-page) :is(button, input, textarea, select) {
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+:is(.questionnaire-page, .feedback-page, .analyzing-page) h1 {
+  font: 700 28px/1.4 var(--font-title);
+  letter-spacing: 0;
+}
+:is(.questionnaire-page, .feedback-page, .analyzing-page) :is(h2, h3) {
+  font: 700 20px/1.5 var(--font-title);
+  letter-spacing: 0;
+}
+:is(.questionnaire-page, .feedback-page) :is(button, a, input, textarea, fieldset):focus-visible {
+  outline: 2px solid #2479ff;
+  outline-offset: 3px;
+}
+:is(.questionnaire-page, .feedback-page) button {
+  cursor: pointer;
+}
+:is(.questionnaire-page, .feedback-page) button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+:is(.questionnaire-page, .feedback-page) ::selection {
+  background: #cde5ff;
+  color: #10264f;
+}
+:is(.questionnaire-page, .feedback-page) textarea {
+  caret-color: #2479ff;
+  resize: vertical;
+}
+:is(.questionnaire-page, .feedback-page) * {
+  scrollbar-color: #b9d3f3 #f6faff;
+  scrollbar-width: thin;
+}
+.task-primary {
+  min-height: 44px;
+  border: 1px solid #2479ff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  background: #2479ff;
+  color: white;
+  font-weight: 650;
+}
+.task-primary:hover {
+  background: #1268ed;
+}
+.task-secondary {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #c5dcfa;
+  border-radius: 8px;
+  color: #1768db;
+  background: #f6faff;
+  font-weight: 650;
+}
+.task-secondary:hover {
+  background: #e8f2ff;
+}
+.questionnaire-page {
+  padding: 0 12px 16px;
+  min-height: 100svh;
+}
+.assessment-app-header {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.assessment-app-header .brand-mark {
+  transform: scale(0.72);
+  transform-origin: left;
+  width: 54px;
+}
+.assessment-app-header > button {
+  margin-left: auto;
+  border: 0;
+  color: #315579;
+  background: transparent;
+  padding: 10px;
+}
+.questionnaire-surface {
+  background: white;
+  border: 1px solid #deebfa;
+  border-radius: 12px;
+  padding: 16px;
+}
+.questionnaire-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+.questionnaire-heading h1 {
+  margin: 0;
+}
+.questionnaire-heading p {
+  margin: 6px 0 10px;
+  color: #486482;
+}
+.questionnaire-heading > span {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.questionnaire-surface > progress {
+  width: 100%;
+  height: 5px;
+  accent-color: #2479ff;
+}
+.questionnaire-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+.questionnaire-groups h2 {
+  margin: 0 0 12px;
+}
+.questionnaire-groups fieldset {
+  margin: 0 0 14px;
+  border: 1px solid #d8e4f3;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 0;
+}
+.questionnaire-groups legend {
+  line-height: 1.6;
+  padding: 0 4px;
+}
+.agreement-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+.agreement-options label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 4px;
+  border-radius: 6px;
+  background: #f5f8fd;
+  cursor: pointer;
+  text-align: center;
+}
+.agreement-options label:hover {
+  background: #eaf1fc;
+}
+.agreement-options label.selected {
+  background: #e0edff;
+  color: #155ebc;
+}
+.agreement-options input {
+  accent-color: #2479ff;
+  width: 16px;
+  height: 16px;
+}
+.questionnaire-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.questionnaire-actions p {
+  color: #486482;
+  margin: 0;
+}
+.feedback-page {
+  padding: 0 12px 16px;
+}
+.feedback-header {
+  height: 62px;
+  width: 100%;
+}
+.feedback-overview,
+.dimension-layout,
+.dimension-grid,
+.feedback-footer {
+  width: 100%;
+}
+.feedback-overview > section,
+.radar-wrap,
+.dimension-grid article,
+.dimension-summary,
+.feedback-center article,
+.feedback-side article {
+  box-shadow: none;
+  border: 1px solid #d8e4f3;
+  background: #fff;
+  border-radius: 12px;
+}
+.dimension-layout {
+  min-height: 0;
+}
+.dimension-summary,
+.feedback-center article,
+.feedback-side article {
+  padding: 16px;
+}
+.dimension-summary h1 {
+  margin-top: 0;
+}
+.dimension-grid article {
+  padding: 14px;
+  min-height: 0;
+  gap: 10px;
+}
+.dimension-grid article > p {
+  font-size: 15px;
+}
+.scene-link {
+  margin-top: 16px;
+  padding: 12px;
+}
+.level-label {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  color: #245480;
+  background: #eef4fc;
+  line-height: 1.5;
+}
+.level-label.high {
+  color: #116145;
+  background: #e8f5ee;
+}
+.level-label.low {
+  color: #885321;
+  background: #fff3e2;
+}
+.level-description dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e3eaf4;
+}
+.level-description dd {
+  margin: 0;
+  font-weight: 650;
+}
+.level-description p {
+  line-height: 1.7;
+}
+.report-method-note {
+  font-size: 14px;
+  color: #486482;
+  line-height: 1.6;
+}
+.dual-evidence-report {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+  align-items: start;
+}
+.dual-evidence-report > div {
+  min-width: 0;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #d8e4f3;
+  border-radius: 12px;
+}
+.dual-evidence-report h2 {
+  margin: 0 0 10px;
+}
+.dual-evidence-report p {
+  line-height: 1.65;
+  margin: 8px 0;
+}
+.attitude-report table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  margin-top: 10px;
+}
+.attitude-report caption {
+  text-align: left;
+  color: #486482;
+  padding-bottom: 8px;
+}
+.attitude-report :is(th, td) {
+  padding: 10px 8px;
+  border-bottom: 1px solid #dce6f3;
+  text-align: left;
+}
+.attitude-report thead {
+  background: #f0f5fc;
+}
+.report-source-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.report-source-list article {
+  padding: 10px 0;
+  border-top: 1px solid #e0e8f4;
+}
+.report-source-list span {
+  overflow-wrap: anywhere;
+  color: #486482;
+}
+.report-reflection label {
+  display: grid;
+  gap: 8px;
+}
+.report-reflection textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #c3d2e6;
+  border-radius: 8px;
+}
+.report-reflection > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+.report-export {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  justify-content: space-between;
+}
+.report-export button {
+  flex-shrink: 0;
+}
+.feedback-overview .overview-score,
+.feedback-overview .portrait-panel {
+  padding: 18px;
+}
+.feedback-overview .portrait-panel p {
+  margin: 10px 0;
+  padding: 10px 0;
+  background: transparent;
+  border-radius: 0;
+  border-top: 1px solid #e0e8f4;
+}
+.feedback-overview .score-panel {
+  padding: 14px;
+}
+.feedback-overview .score-panel strong {
+  font-size: 52px;
+}
+@media (max-width: 1250px) {
+  .questionnaire-groups {
+    gap: 12px;
+  }
+  .dimension-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 850px) {
+  .questionnaire-groups,
+  .dual-evidence-report {
+    grid-template-columns: 1fr;
+  }
+  .feedback-header nav {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    justify-self: stretch;
+  }
+  .feedback-header nav a {
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 650px) {
+  .questionnaire-page,
+  .feedback-page {
+    padding-inline: 8px;
+  }
+  .questionnaire-surface {
+    padding: 12px;
+  }
+  :is(.questionnaire-page, .feedback-page) h1 {
+    font-size: 26px;
+  }
+  .questionnaire-actions,
+  .report-export {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .questionnaire-heading {
+    align-items: flex-start;
+  }
+  .questionnaire-heading > span {
+    margin-top: 8px;
+  }
+  .assessment-app-header > span {
+    font-size: 14px;
+  }
+  .dimension-grid {
+    grid-template-columns: 1fr;
+  }
+  .feedback-header {
+    height: auto;
+    padding-top: 8px;
+  }
+  .task-primary {
+    width: 100%;
+  }
+}

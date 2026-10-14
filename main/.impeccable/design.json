@@ -1,60 +1,46 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T04:46:01.907Z",
+  "generatedAt": "2026-10-14T06:54:40.196Z",
   "title": "Design System: 校园数字媒体社测评工作台",
   "extensions": {
     "colorMeta": {
       "primary": {
         "role": "primary",
-        "displayName": "工作台蓝",
-        "tonalRamp": [
-          "#12335b",
-          "#144983",
-          "#155ebc",
-          "#1768d2",
-          "#5494e5",
-          "#94bdf0",
-          "#c8e3ff",
-          "#edf4fc"
-        ]
+        "displayName": "主操作蓝"
       },
       "canvas": {
         "role": "neutral",
-        "displayName": "浅蓝背景"
+        "displayName": "浅蓝画布"
       },
       "surface": {
         "role": "neutral",
-        "displayName": "白色操作面"
+        "displayName": "白色工作面"
       },
-      "text": {
+      "browser-chrome": {
         "role": "neutral",
-        "displayName": "深蓝正文"
+        "displayName": "浏览器外壳"
       }
     },
     "typographyMeta": {
       "headline": {
-        "displayName": "页面主标题",
-        "purpose": "任务、问卷、报告的26px主标题；首页保留既有规格。"
-      },
-      "title": {
-        "displayName": "章节标题",
-        "purpose": "18px宋体章节标题。"
+        "displayName": "页面标题",
+        "purpose": "桌面28px、手机26px的宋体标题。"
       },
       "body": {
-        "displayName": "操作正文",
-        "purpose": "15px黑体正文与控件。"
+        "displayName": "任务正文",
+        "purpose": "桌面18px、手机16px的黑体正文。"
+      },
+      "compact-body": {
+        "displayName": "密集正文",
+        "purpose": "问卷及报告的15px正文。"
       }
     },
     "shadows": [],
     "motion": [],
     "breakpoints": [
       {
-        "name": "compact-desktop",
-        "value": "1250px"
-      },
-      {
-        "name": "stacked-workspace",
-        "value": "850px"
+        "name": "compact",
+        "value": "900px"
       },
       {
         "name": "mobile",
@@ -64,66 +50,68 @@
   },
   "components": [
     {
-      "name": "主操作",
+      "name": "主要操作",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "推进任务或提交问卷。",
-      "html": "<button class=\"ds-primary\">提交并继续</button>",
-      "css": ".ds-primary{min-height:42px;padding:9px 18px;border:0;border-radius:8px;background:#1768d2;color:white;font:650 15px var(--font-body,sans-serif);cursor:pointer}.ds-primary:hover{background:#155ebc}.ds-primary:focus-visible{outline:2px solid #1664cf;outline-offset:3px}"
+      "description": "发送消息或提交结果。",
+      "html": "<button class=\"ds-primary\">发送</button>",
+      "css": ".ds-primary{padding:10px 22px;min-height:48px;border:1px solid #2479ff;border-radius:10px;color:white;background:#2479ff;font:650 18px var(--font-body,sans-serif)}.ds-primary:hover{background:#1268ed}.ds-primary:focus-visible{outline:2px solid #2479ff;outline-offset:3px}"
     },
     {
-      "name": "次操作",
-      "kind": "button",
-      "description": "保存反思或添加引用。",
-      "html": "<button class=\"ds-secondary\">加入引用消息</button>",
-      "css": ".ds-secondary{min-height:38px;padding:8px 14px;border:1px solid #b9cde8;border-radius:8px;color:#1654a0;background:#f4f8ff;font:650 15px var(--font-body,sans-serif);cursor:pointer}.ds-secondary:hover{background:#e4efff}.ds-secondary:focus-visible{outline:2px solid #1664cf;outline-offset:3px}"
-    },
-    {
-      "name": "证据摘录输入",
-      "kind": "input",
-      "description": "粘贴或编辑可追溯原文。",
-      "html": "<label class=\"ds-field\">证据摘录<textarea placeholder=\"从原文摘录\"></textarea></label>",
-      "css": ".ds-field{display:grid;gap:6px;color:#203d63;font:15px var(--font-body,sans-serif)}.ds-field textarea{min-height:84px;padding:10px;border:1px solid #bed0e7;border-radius:8px;font:15px var(--font-body,sans-serif);resize:vertical}.ds-field textarea:focus-visible{outline:2px solid #1664cf;outline-offset:3px}"
-    },
-    {
-      "name": "信源导航",
+      "name": "工具导航",
       "kind": "nav",
-      "description": "在文章、作者和本站信息之间切换。",
-      "html": "<nav class=\"ds-nav\"><button aria-pressed=\"true\">文章</button><button>关于作者</button><button>关于本站</button></nav>",
-      "css": ".ds-nav{display:flex;gap:8px}.ds-nav button{border:1px solid #cbd9eb;border-radius:6px;background:white;padding:7px 10px;color:#355a85;font:15px var(--font-body,sans-serif)}.ds-nav [aria-pressed=true]{background:#e6efff;color:#155ebc}.ds-nav button:hover{background:#eaf2fd}.ds-nav button:focus-visible{outline:2px solid #1664cf;outline-offset:3px}"
+      "description": "四个独立入口的当前项。",
+      "html": "<nav class=\"ds-tools\"><button aria-selected=\"true\">和社团聊天</button><button>查证浏览器</button><button>问问 AI</button><button>工作台</button></nav>",
+      "css": ".ds-tools{display:flex;gap:16px}.ds-tools button{padding:14px 20px;border:0;border-bottom:3px solid transparent;border-radius:12px 12px 0 0;background:transparent;color:#516889;font:650 18px var(--font-body,sans-serif)}.ds-tools [aria-selected=true]{background:#e1eeff;color:#1268ed;border-bottom-color:#2479ff}.ds-tools button:hover{background:#eaf3ff}.ds-tools button:focus-visible{outline:2px solid #2479ff;outline-offset:3px}"
     },
     {
-      "name": "工作面板",
-      "kind": "card",
-      "description": "独立任务区域，细边框，无阴影。",
-      "html": "<section class=\"ds-panel\"><h2>查证浏览器</h2><p>仿真信源与操作工具</p></section>",
-      "css": ".ds-panel{padding:12px;border:1px solid #d8e4f3;border-radius:10px;background:#fff;color:#203d63;font:15px var(--font-body,sans-serif)}.ds-panel h2{margin:0 0 8px;font:700 18px/1.5 var(--font-title,serif)}.ds-panel p{margin:0;line-height:1.65}"
-    },
-    {
-      "name": "角色消息",
+      "name": "社团消息",
       "kind": "custom",
-      "description": "名称使用宋体，消息正文使用黑体。",
-      "html": "<article class=\"ds-message\"><strong>社长 林澄</strong><p>把结论和查到的证据发来吧。</p></article>",
-      "css": ".ds-message{color:#203d63}.ds-message strong{font:700 16px var(--font-title,serif)}.ds-message p{margin:6px 0 0;padding:10px;background:#f6f9fe;border-radius:0 10px 10px;font:15px/1.65 var(--font-body,sans-serif)}"
+      "description": "角色名称与收到的消息。",
+      "html": "<article class=\"ds-message\"><strong>好友 小夏</strong><p>欢迎加入校园数字媒体社！把结论和查到的证据发来吧。</p></article>",
+      "css": ".ds-message strong{font:700 18px var(--font-title,serif);color:#10264f}.ds-message p{padding:14px 18px;border-radius:16px;background:#f2f5fa;color:#10264f;font:18px/1.75 var(--font-body,sans-serif)}"
+    },
+    {
+      "name": "任务附件",
+      "kind": "button",
+      "description": "聊天附件只跳转工作台。",
+      "html": "<button class=\"ds-attachment\"><strong>采购建议（待核查）</strong><span>约900元预算 · 通勤与运动</span></button>",
+      "css": ".ds-attachment{padding:12px 16px;border:0;border-radius:12px;background:#fff;color:#153466;text-align:left}.ds-attachment strong{font:700 18px var(--font-title,serif);display:block}.ds-attachment span{display:block;margin-top:4px;color:#617ca5;font:16px var(--font-body,sans-serif)}.ds-attachment:hover{background:#f7fbff}.ds-attachment:focus-visible{outline:2px solid #2479ff;outline-offset:3px}"
+    },
+    {
+      "name": "浏览器标签",
+      "kind": "custom",
+      "description": "网页名称、站点图标与关闭控件独立于工作台导航。",
+      "html": "<div class=\"ds-browser-tab\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\" fill=\"none\" stroke=\"currentColor\"/><path d=\"M3 12h18M12 3c-5 4-5 14 0 18M12 3c5 4 5 14 0 18\" stroke=\"currentColor\" fill=\"none\"/></svg><span>官方参数页</span><button aria-label=\"关闭标签\">×</button></div>",
+      "css": ".ds-browser-tab{display:flex;gap:9px;align-items:center;padding:11px 14px;border-radius:12px 12px 0 0;background:#fff;color:#394e69;font:15px var(--font-body,sans-serif)}.ds-browser-tab button{margin-left:auto;border:0;background:transparent;color:#4c607b;font-size:18px}.ds-browser-tab button:hover{background:#cbd9ea}.ds-browser-tab button:focus-visible{outline:2px solid #2479ff;outline-offset:3px}"
+    },
+    {
+      "name": "网页资料卡",
+      "kind": "card",
+      "description": "标题、网址与摘要在网页内容区排列。",
+      "html": "<article class=\"ds-result\"><button>官方参数页</button><span>https://yunsheng.example/products/s9</span><p>查看产品参数与说明。</p></article>",
+      "css": ".ds-result{padding:20px 24px;border:1px solid #d8e6f8;border-radius:14px;background:#fcfdff;color:#50688c;font:18px/1.6 var(--font-body,sans-serif)}.ds-result button{padding:0;border:0;background:transparent;color:#2479ff;font:700 20px var(--font-body,sans-serif)}.ds-result span{display:block;margin-top:4px;color:#159b84;font-size:16px}.ds-result button:hover{text-decoration:underline}.ds-result button:focus-visible{outline:2px solid #2479ff;outline-offset:3px}"
     }
   ],
   "narrative": {
-    "northStar": "安静而连续的社团工作台",
-    "overview": "在既有蓝白视觉中扩展情境任务。主要操作与角色消息并列，浏览器和提交物保持可见。首页继续使用原有布局与样式，本文件新增规范适用于任务、问卷、分析与反馈。",
+    "northStar": "消息派活，工具独立，工作连续",
+    "overview": "视觉基准为 images 中的新版社团对话界面、新版查证浏览器和新版问问ai。沿用参考图的浅蓝背景、白色全宽面板、顶部切换、左右聊天气泡、附件入口和底部输入栏。新增工作台承载编辑与提交，四个任务共用同一框架。",
     "keyCharacteristics": [
-      "全宽利用空间，不使用居中的窄任务卡。",
-      "内容决定密度，不用重复提示和空卡片占位。",
-      "角色消息推动任务，反馈报告解释已记录的行为。"
+      "社团聊天只处理沟通与附件跳转。",
+      "查证浏览器拥有独立网页标签、导航和地址栏。",
+      "AI 对话拥有任务上下文与独立输入栏。",
+      "工作台处理材料阅读、编辑、最终判断和提交。"
     ],
     "rules": [],
     "dos": [
-      "Do 保留首页原有视觉与内容。",
-      "Do 用统一的字体层级和紧凑间距覆盖测评页面。",
-      "Do 保留可见焦点、真实标签、手机单栏和无横向溢出的布局。"
+      "Do 保留三张新版图中的导航、气泡、附件与输入栏关系。",
+      "Do 保留文字标签，不用图标替代入口含义。",
+      "Do 让聊天、网页、AI 与任务编辑保持独立。"
     ],
     "donts": [
-      "Don't 在任务中暴露分数或正确答案。",
-      "Don't 将仿真数据、原创建议问卷或项目等级标为官方或已验证结果。"
+      "Don't 把任务表单和查证页面再次塞进聊天侧栏。",
+      "Don't 重新引入旧任务页、抽屉或重复样式。",
+      "Don't 把仿真信源、问卷草案或项目参考等级标为官方已验证结果。"
     ]
   }
 }

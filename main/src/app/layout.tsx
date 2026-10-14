@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import './assessment-tasks.css'
-import './assessment-enhancements.css'
+import './assessment-support.css'
+import './workspace-desktop.css'
 import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {

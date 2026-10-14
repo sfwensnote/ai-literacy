@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { completeQuestionnaire } from './questionnaire-helpers'
+import { completeQuestionnaire, openWorkbench } from './questionnaire-helpers'
 
 test('completes four scenes and opens behavior-grounded feedback', async ({ page }) => {
   await page.goto('/')
@@ -14,16 +14,18 @@ test('completes four scenes and opens behavior-grounded feedback', async ({ page
   await page.getByLabel('向 AI 追问').fill('95% 的用户满意是从哪里来的？')
   await page.getByRole('button', { name: '发送' }).click()
   await expect(page.getByText(/无法提供.*正式调查报告/)).toBeVisible()
-  await page.getByRole('button', { name: '关闭 AI' }).click()
+  await page.getByRole('button', { name: '查看任务附件' }).click()
   await page.getByRole('radio', { name: /再查一查再决定/ }).check()
   await page.getByRole('button', { name: '下一步' }).click()
   await page.getByLabel('判断理由').fill('需要进一步核查排名来源。')
   await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
+  await openWorkbench(page)
   await expect(page).toHaveURL(/assessment\/2/)
 
   await page.getByRole('button', { name: '就这样，可以' }).click()
   await page.getByRole('button', { name: '确认并继续' }).click()
+  await openWorkbench(page)
   await expect(page).toHaveURL(/assessment\/3/)
 
   await page.getByRole('button', { name: '问问 AI' }).click()
@@ -31,9 +33,10 @@ test('completes four scenes and opens behavior-grounded feedback', async ({ page
   await page.getByRole('button', { name: '发送' }).click()
   await expect(page.getByText(/示例性.*不一定对应真实存在/)).toBeVisible()
   await page.getByRole('button', { name: '应用到报告' }).click()
-  await page.getByRole('button', { name: '关闭 AI' }).click()
+  await page.getByRole('button', { name: '查看任务附件' }).click()
   await page.getByRole('button', { name: /进入最终稿/ }).click()
   await page.getByRole('button', { name: /提交我的报告/ }).click()
+  await openWorkbench(page)
   await expect(page).toHaveURL(/assessment\/4/)
 
   await page.getByRole('button', { name: '形成我的判断' }).click()
@@ -56,8 +59,7 @@ test('keeps an unfinished scene draft after refresh', async ({ page }) => {
   await completeQuestionnaire(page, 'pre')
   await page.getByRole('button', { name: '在同价位降噪耳机中排名第一', exact: true }).click()
   await page.reload()
-  await expect(page.getByRole('button', { name: '在同价位降噪耳机中排名第一', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
+  await expect(
+    page.getByRole('button', { name: '在同价位降噪耳机中排名第一', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true')
 })

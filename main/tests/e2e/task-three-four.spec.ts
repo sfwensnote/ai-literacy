@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { completeQuestionnaire } from './questionnaire-helpers'
+import { completeQuestionnaire, openWorkbench } from './questionnaire-helpers'
 
 async function startFresh(page: Page) {
   await page.goto('/')
@@ -16,8 +16,10 @@ async function reachTaskThree(page: Page) {
   await page.getByLabel('判断理由').fill('还需要核验产品依据。')
   await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
+  await openWorkbench(page)
   await page.getByRole('button', { name: '就这样，可以' }).click()
   await page.getByRole('button', { name: '确认并继续' }).click()
+  await openWorkbench(page)
   await expect(page).toHaveURL(/assessment\/3/)
 }
 
@@ -25,6 +27,7 @@ async function reachTaskFour(page: Page) {
   await reachTaskThree(page)
   await page.getByRole('button', { name: /进入最终稿/ }).click()
   await page.getByRole('button', { name: /提交我的报告/ }).click()
+  await openWorkbench(page)
   await expect(page).toHaveURL(/assessment\/4/)
 }
 
@@ -36,6 +39,7 @@ test('task three verifies and updates the only current report', async ({ page })
   await page.getByLabel('向 AI 追问').fill('这些参考资料都是真实的吗？')
   await page.getByRole('button', { name: '发送' }).click()
   await page.getByRole('button', { name: '应用到报告' }).click()
+  await page.getByRole('button', { name: '查看任务附件' }).click()
   await expect(page.getByText(/需补充可检索来源/)).toBeVisible()
   await expect(page.getByRole('heading', { name: '当前报告' })).toHaveCount(1)
 })
@@ -49,7 +53,9 @@ test('task three keeps manual edits after refresh', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '当前报告' })).toHaveCount(1)
 })
 
-test('task four preserves the privacy boundary and supports an independent decision', async ({ page }) => {
+test('task four preserves the privacy boundary and supports an independent decision', async ({
+  page,
+}) => {
   await reachTaskFour(page)
   await expect(page.getByLabel('真实姓名')).not.toBeChecked()
   await expect(page.getByLabel('手机号')).not.toBeChecked()
@@ -57,7 +63,7 @@ test('task four preserves the privacy boundary and supports an independent decis
   await page.getByLabel('向 AI 追问').fill('最大的风险是什么？')
   await page.getByRole('button', { name: '发送' }).click()
   await expect(page.getByText(/时间投入与项目期望不匹配/)).toBeVisible()
-  await page.getByRole('button', { name: '关闭 AI' }).click()
+  await page.getByRole('button', { name: '查看任务附件' }).click()
   await page.getByRole('button', { name: '形成我的判断' }).click()
   await page.getByRole('button', { name: '方向匹配' }).click()
   await page.getByRole('button', { name: '时间可控' }).click()
