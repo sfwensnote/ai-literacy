@@ -4,6 +4,7 @@ import { Check, LoaderCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useAssessmentStore } from '../../features/assessment/session-store'
+import { getAllowedRoute } from '../../features/assessment/session-guards'
 import { extractEvidence } from '../../features/scoring/evidence-extractor'
 import { calculateScores } from '../../features/scoring/scoring-service'
 import { Logo } from '../ui/logo'
@@ -20,7 +21,8 @@ export function AnalyzingClient() {
   useEffect(() => {
     if (!hydrated) return
     if (!session) { router.replace('/'); return }
-    if (!session.scenes.internship.completedAt) { router.replace(`/assessment/${session.currentScene}`); return }
+    const allowed = getAllowedRoute(session)
+    if (allowed !== '/analyzing') { router.replace(allowed); return }
     const timers = steps.map((_, index) => window.setTimeout(() => setVisible(index + 1), index * 350 + 180))
     const finish = window.setTimeout(() => {
       const evidence = extractEvidence(session)

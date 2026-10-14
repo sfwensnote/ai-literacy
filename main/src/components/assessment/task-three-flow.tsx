@@ -150,7 +150,7 @@ export function TaskThreeFlow({ draft: rawDraft, messages, updateDraft, recordEv
 
   return (
     <AssessmentTaskShell current={3} title="用 AI 帮我写一份报告" subtitle="检查这份 AI 初稿，整理成你愿意提交的版本。">
-      <RequirementStrip title="报告要求" items={requirements} />
+      <RequirementStrip title="社团专题要求" items={requirements} />
       <div className={`task-three-workspace ${draft.phase === 'ai_assist' ? 'with-ai' : ''}`}>
         <div className="task-three-main">
           <ReportDocument report={draft.report} editing={editing} selectedClaims={draft.selectedClaims} changedClaimIds={draft.changedClaimIds} onToggleClaim={toggleClaim} onChange={updateReport} />

@@ -16,6 +16,6 @@ it('describes both observed and missing verification behaviors', () => {
   const feedback = generateFeedback(session, evidence, calculateScores(evidence))
   const detail = feedback.dimensions.ai_evaluation.feedback.join(' ')
   expect(detail).toContain('95%')
-  expect(detail).toContain('没有继续追问')
+  expect(detail).toContain('没有继续核查')
   expect(detail).toContain('排名')
 })

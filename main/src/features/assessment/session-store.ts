@@ -11,8 +11,10 @@ import type {
   SceneId,
   SceneSession,
   SceneSubmission,
+  QuestionnaireStage,
 } from './types'
 import { sceneOrder } from './types'
+import { isQuestionnaireComplete, questionnaireItems } from './questionnaire'
 
 const emptyScene = (): SceneSession => ({
   messages: [],
@@ -51,6 +53,8 @@ interface AssessmentState {
   submitScene: (sceneId: SceneId, submission: SceneSubmission) => void
   setResults: (evidence: Evidence[], scores: DimensionScores) => void
   resetSession: () => void
+  setQuestionnaireAnswer: (stage: QuestionnaireStage, id: string, value: number) => void
+  completeQuestionnaire: (stage: QuestionnaireStage) => void
 }
 
 const memoryValues = new Map<string, string>()
@@ -69,6 +73,19 @@ export const assessmentStore = createStore<AssessmentState>()(
       hydrated: false,
       startSession: () => set((state) => ({ session: state.session ?? createAssessmentSession() })),
       markHydrated: () => set({ hydrated: true }),
+      setQuestionnaireAnswer: (stage, id, value) => set((state) => {
+        if (!state.session || !questionnaireItems.some((item) => item.id === id) || !Number.isInteger(value) || value < 1 || value > 5) return state
+        const previous = state.session.questionnaires?.[stage]
+        if (previous?.completedAt) return state
+        return { session: { ...state.session, questionnaires: { ...state.session.questionnaires, [stage]: { answers: { ...previous?.answers, [id]: value } } } } }
+      }),
+      completeQuestionnaire: (stage) => set((state) => {
+        if (!state.session) return state
+        const response = state.session.questionnaires?.[stage]
+        if (!isQuestionnaireComplete(response) || response?.completedAt) return state
+        if (stage === 'post' && sceneOrder.some((id) => !state.session!.scenes[id].completedAt)) return state
+        return { session: { ...state.session, ...(stage === 'post' ? { scores: undefined, completedAt: undefined, evidence: [] } : {}), questionnaires: { ...state.session.questionnaires, [stage]: { ...response!, completedAt: new Date().toISOString() } } } }
+      }),
       startScene: (sceneId) => set((state) => {
         const session = state.session ?? createAssessmentSession()
         const scene = session.scenes[sceneId]

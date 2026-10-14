@@ -1,5 +1,6 @@
 import type { AssessmentSession, Dimension, DimensionScores, Evidence } from '../assessment/types'
 import { calculateTotal } from './scoring-service'
+import { getProficiencyLevel, type ProficiencyLevel } from './proficiency-levels'
 
 export interface CapabilityItem { label: string; value: number }
 
@@ -12,6 +13,7 @@ export interface DimensionFeedback {
   capabilities: CapabilityItem[]
   suggestions: string[]
   behaviors: string[]
+  level: ProficiencyLevel
 }
 
 export interface FeedbackModel {
@@ -28,7 +30,7 @@ const meta: Record<Dimension, { name: string; scene: string; labels: string[]; s
     suggestions: ['进一步验证信息来源', '比较不同立场与证据', '在结论中区分事实和推断'],
   },
   ai_use: {
-    name: 'AI 使用与问题解决', scene: '杭州周末旅行规划',
+    name: 'AI 使用与问题解决', scene: '社团杭州采风筹备',
     labels: ['任务拆解', '提示表达', '条件补充', '结果优化'],
     suggestions: ['先将复杂需求拆成子问题', '在提示中补充约束与偏好', '比较多个方案后再定稿'],
   },
@@ -38,7 +40,7 @@ const meta: Record<Dimension, { name: string; scene: string; labels: string[]; s
     suggestions: ['对强结论追问原始依据', '用独立测评交叉核验产品信息', '明确自己的购买判断标准'],
   },
   ai_responsibility: {
-    name: 'AI 责任与合理使用', scene: '实习投递决策',
+    name: 'AI 责任与合理使用', scene: '社团合作实习判断',
     labels: ['信息边界', '隐私保护', '风险意识', '独立决策'],
     suggestions: ['只提供完成任务所必需的信息', '主动评估 AI 建议的现实风险', '把最终决策权留给自己'],
   },
@@ -67,6 +69,7 @@ export function generateFeedback(
       summary: score >= 82 ? '你在这一维度表现稳定，能够主动做出较成熟的选择。' : score >= 70 ? '你已经形成良好基础，在关键环节仍有提升空间。' : '你开始关注这一能力，建议在真实任务中继续练习。',
       feedback,
       behaviors,
+      level: getProficiencyLevel(dimension, score),
       capabilities: meta[dimension].labels.map((label, index) => ({ label, value: Math.max(45, Math.min(96, score + [3, -4, 1, -6][index])) })),
       suggestions: meta[dimension].suggestions,
     }

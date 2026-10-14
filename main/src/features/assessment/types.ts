@@ -39,6 +39,20 @@ export interface HeadphoneSubmission {
   decision: 'adopt' | 'more_info' | 'reject'
   verifyItems: string[]
   reason: string
+  citations?: SourceCitation[]
+}
+
+export interface SourceCitation {
+  sourceId: string
+  url: string
+  excerpt: string
+}
+
+export type QuestionnaireStage = 'pre' | 'post'
+
+export interface QuestionnaireResponse {
+  answers: Record<string, number>
+  completedAt?: string
 }
 
 export interface ItineraryItem {
@@ -151,6 +165,7 @@ export interface AssessmentSession {
   evidence: Evidence[]
   scores?: DimensionScores
   completedAt?: string
+  questionnaires?: Partial<Record<QuestionnaireStage, QuestionnaireResponse>>
 }
 
 export const sceneOrder: SceneId[] = ['headphones', 'trip', 'report', 'internship']

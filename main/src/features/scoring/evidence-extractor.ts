@@ -8,6 +8,7 @@ import type {
   TripSubmission,
   Dimension,
 } from '../assessment/types'
+import { findBrowserSource, validateCitation } from '../assessment/browser-sources'
 
 function evidence(
   key: string,
@@ -34,18 +35,28 @@ const intents = (session: AssessmentSession, sceneId: SceneId) =>
 
 export function extractEvidence(session: AssessmentSession): Evidence[] {
   const items: Evidence[] = []
+  const browserActions = session.scenes.headphones.actions
+  const sourceIds = new Set(browserActions.filter((item) => item.type === 'browser_source_open' && findBrowserSource(String(item.payload.sourceId))).map((item) => String(item.payload.sourceId)))
+  const independentCheck = [...sourceIds].some((id) => findBrowserSource(id)?.independent) && sourceIds.size >= 2
+  const provenance = browserActions.some((item) => ['browser_about_author', 'browser_about_site'].includes(item.type) && sourceIds.has(String(item.payload.sourceId)))
+  const sourceSubmission = session.scenes.headphones.finalSubmission as HeadphoneSubmission | undefined
+  const validCitations = (sourceSubmission?.citations ?? []).filter(validateCitation)
+  const distinctCitations = new Set(validCitations.map((citation) => citation.url))
+  if (sourceIds.size) items.push(evidence('lateral_reading', 'ai_evaluation', 'headphones', independentCheck ? 'positive' : 'unknown', independentCheck ? 8 : 0, independentCheck ? '你离开 AI 建议，打开了不同信源，并查看了独立对比记录。' : '你查看了外部材料，但尚未形成包含独立信源的横向比较。'))
+  if (provenance) items.push(evidence('source_provenance', 'information_judgement', 'headphones', 'positive', 6, '你查看了作者或网站介绍，追溯了信息的发布主体。'))
+  if (validCitations.length) items.push(evidence('source_citations', 'information_judgement', 'headphones', 'positive', distinctCitations.size >= 2 ? 8 : 4, `你在最终消息中保留了 ${distinctCitations.size} 个来源的 URL 和可追溯原文摘录。`))
 
   const headphoneIntents = intents(session, 'headphones')
   const headphone = session.scenes.headphones.finalSubmission as HeadphoneSubmission | undefined
-  const asked95 = headphoneIntents.includes('satisfaction_source')
-  const askedRanking = headphoneIntents.includes('ranking_source')
+  const asked95 = headphoneIntents.includes('satisfaction_source') || sourceIds.has('survey')
+  const askedRanking = headphoneIntents.includes('ranking_source') || independentCheck
   items.push(evidence(
     asked95 ? 'asked_95' : 'missed_95', 'ai_evaluation', 'headphones', asked95 ? 'positive' : 'negative', asked95 ? 6 : -3,
-    asked95 ? '在耳机任务中，你主动询问了“95% 用户满意”的数据来源。' : '在耳机任务中，你没有追问“95% 用户满意”的数据来源。',
+    asked95 ? sourceIds.has('survey') ? '你查看了“95% 用户满意”的活动回访说明及其样本范围。' : '在耳机任务中，你主动询问了“95% 用户满意”的数据来源。' : '在耳机任务中，你没有继续核查“95% 用户满意”的数据来源。',
   ))
   items.push(evidence(
     askedRanking ? 'asked_ranking' : 'missed_ranking', 'ai_evaluation', 'headphones', askedRanking ? 'positive' : 'negative', askedRanking ? 6 : -3,
-    askedRanking ? '你继续核验了“同价位降噪排名第一”的依据。' : '你没有继续追问“同价位降噪排名第一”的依据。',
+    askedRanking ? independentCheck ? '你通过外部对比记录查证了“排名第一”的依据。' : '你继续核验了“同价位降噪排名第一”的依据。' : '你没有继续核查“同价位降噪排名第一”的依据。',
   ))
   if (headphone) {
     const checked95 = headphone.verifyItems.includes('satisfaction')

@@ -4,8 +4,10 @@ import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Logo } from '../ui/logo'
 import { ProgressDots } from '../ui/progress-dots'
+import { NarrativeThread } from './narrative-thread'
+import { clubTasks } from '../../features/assessment/narrative'
 
-export function AssessmentTaskShell({ current, title, subtitle, children }: {
+export function AssessmentTaskShell({ current, children }: {
   current: number
   title: string
   subtitle: string
@@ -21,10 +23,9 @@ export function AssessmentTaskShell({ current, title, subtitle, children }: {
       </header>
       <section className="focused-task-shell">
         <div className="focused-task-intro">
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
+          <h1>{clubTasks[current - 1].title}</h1>
         </div>
-        {children}
+        <div className="club-workspace"><NarrativeThread current={current} /><div className="club-task-content">{children}</div></div>
       </section>
     </main>
   )

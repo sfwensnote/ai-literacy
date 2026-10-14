@@ -142,7 +142,7 @@ export function TaskTwoFlow({ draft: rawDraft, messages, updateDraft, recordEven
 
   return (
     <AssessmentTaskShell current={2} title="帮朋友把杭州周末行程改得更合适" subtitle={subtitle}>
-      <RequirementStrip title="朋友的需求" items={requirements} />
+      <RequirementStrip title="社团采风需求" items={requirements} />
       <div className={`task-two-workspace ${draft.phase === 'ai_assist' ? 'with-ai' : ''}`}>
         {draft.phase === 'editing'
           ? <ItineraryEditor items={draft.itinerary} onEdit={editItem} onDelete={deleteItem} onMove={moveItem} onAdd={addItem} />

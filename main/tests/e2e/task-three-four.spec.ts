@@ -1,16 +1,20 @@
 import { expect, test, type Page } from '@playwright/test'
+import { completeQuestionnaire } from './questionnaire-helpers'
 
 async function startFresh(page: Page) {
   await page.goto('/')
   await page.evaluate(() => localStorage.clear())
   await page.reload()
   await page.getByRole('link', { name: /开始测评/ }).click()
+  await completeQuestionnaire(page, 'pre')
 }
 
 async function reachTaskThree(page: Page) {
   await startFresh(page)
   await page.getByRole('radio', { name: /再查一查再决定/ }).check()
   await page.getByRole('button', { name: '下一步' }).click()
+  await page.getByLabel('判断理由').fill('还需要核验产品依据。')
+  await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
   await page.getByRole('button', { name: '就这样，可以' }).click()
   await page.getByRole('button', { name: '确认并继续' }).click()
@@ -64,7 +68,7 @@ test('task four preserves the privacy boundary and supports an independent decis
   await page.getByRole('radio', { name: /再了解一下/ }).check()
   await page.getByRole('button', { name: '确认我的选择' }).click()
   await page.getByRole('button', { name: '提交我的判断' }).click()
-  await expect(page).toHaveURL(/analyzing|feedback/)
+  await expect(page).toHaveURL(/questionnaire\/post/)
 })
 
 test('task four keeps shared-information choices after refresh', async ({ page }) => {

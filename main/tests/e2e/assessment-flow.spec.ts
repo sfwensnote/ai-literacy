@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
+import { completeQuestionnaire } from './questionnaire-helpers'
 
 test('completes four scenes and opens behavior-grounded feedback', async ({ page }) => {
   await page.goto('/')
   await page.evaluate(() => localStorage.clear())
   await page.reload()
   await page.getByRole('link', { name: /开始测评/ }).click()
-  await expect(page.getByRole('heading', { name: '朋友想买一款耳机，先问了 AI' })).toBeVisible()
+  await completeQuestionnaire(page, 'pre')
+  await expect(page.getByRole('heading', { name: '核查社团采购建议' })).toBeVisible()
 
   await page.getByRole('button', { name: /95% 的用户表示满意/ }).click()
   await page.getByRole('button', { name: '问问 AI' }).click()
@@ -15,6 +17,8 @@ test('completes four scenes and opens behavior-grounded feedback', async ({ page
   await page.getByRole('button', { name: '关闭 AI' }).click()
   await page.getByRole('radio', { name: /再查一查再决定/ }).check()
   await page.getByRole('button', { name: '下一步' }).click()
+  await page.getByLabel('判断理由').fill('需要进一步核查排名来源。')
+  await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
   await expect(page).toHaveURL(/assessment\/2/)
 
@@ -38,6 +42,7 @@ test('completes four scenes and opens behavior-grounded feedback', async ({ page
   await page.getByRole('radio', { name: /再了解一下/ }).check()
   await page.getByRole('button', { name: '确认我的选择' }).click()
   await page.getByRole('button', { name: /提交我的判断/ }).click()
+  await completeQuestionnaire(page, 'post')
   await expect(page).toHaveURL(/feedback/, { timeout: 6000 })
   await page.getByRole('link', { name: 'AI 评价与批判性分析' }).click()
   await expect(page.getByText(/主动询问了.*95%/).first()).toBeVisible()
@@ -48,6 +53,7 @@ test('keeps an unfinished scene draft after refresh', async ({ page }) => {
   await page.evaluate(() => localStorage.clear())
   await page.reload()
   await page.getByRole('link', { name: /开始测评/ }).click()
+  await completeQuestionnaire(page, 'pre')
   await page.getByRole('button', { name: '在同价位降噪耳机中排名第一', exact: true }).click()
   await page.reload()
   await expect(page.getByRole('button', { name: '在同价位降噪耳机中排名第一', exact: true })).toHaveAttribute(

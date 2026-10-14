@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import './assessment-tasks.css'
+import './assessment-enhancements.css'
+import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {
   title: 'AI 素养场景化测评',

@@ -1,10 +1,12 @@
 import { expect, test, type Page } from '@playwright/test'
+import { completeQuestionnaire } from './questionnaire-helpers'
 
 async function startFresh(page: Page) {
   await page.goto('/')
   await page.evaluate(() => localStorage.clear())
   await page.reload()
   await page.getByRole('link', { name: /开始测评/ }).click()
+  await completeQuestionnaire(page, 'pre')
 }
 
 async function reachTaskTwo(page: Page) {
@@ -12,14 +14,15 @@ async function reachTaskTwo(page: Page) {
   await page.getByRole('button', { name: /同价位降噪耳机中排名第一/ }).click()
   await page.getByRole('radio', { name: /再查一查再决定/ }).check()
   await page.getByRole('button', { name: '下一步' }).click()
-  await page.getByLabel('简单说说原因').fill('缺少统一、正式的比较依据。')
+  await page.getByLabel('判断理由').fill('缺少统一、正式的比较依据。')
+  await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
   await expect(page).toHaveURL(/assessment\/2/)
 }
 
 test('task one keeps AI collapsed until the user opens it and records a final decision', async ({ page }) => {
   await startFresh(page)
-  await expect(page.getByRole('heading', { name: '朋友想买一款耳机，先问了 AI' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '核查社团采购建议' })).toBeVisible()
   await expect(page.getByLabel('向 AI 追问')).toHaveCount(0)
 
   await page.getByRole('button', { name: /95% 的用户表示满意/ }).click()
@@ -32,7 +35,8 @@ test('task one keeps AI collapsed until the user opens it and records a final de
   await page.getByRole('radio', { name: /再查一查再决定/ }).check()
   await page.getByRole('button', { name: '下一步' }).click()
   await expect(page.getByText('AI 补充信息')).toBeVisible()
-  await page.getByLabel('简单说说原因').fill('我会先核验来源再推荐。')
+  await page.getByLabel('判断理由').fill('我会先核验来源再推荐。')
+  await page.getByLabel('暂未找到可引用来源').check()
   await page.getByRole('button', { name: /提交并继续/ }).click()
   await expect(page).toHaveURL(/assessment\/2/)
 })

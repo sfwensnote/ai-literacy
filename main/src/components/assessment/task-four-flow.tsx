@@ -153,7 +153,7 @@ export function TaskFourFlow({ draft: rawDraft, messages, updateDraft, recordEve
 
   return (
     <AssessmentTaskShell current={4} title="我该投这份实习吗？" subtitle="先看清岗位和自己的情况，再决定是否投递。">
-      <RequirementStrip title="岗位信息" items={jobFacts} />
+      <RequirementStrip title="社长转来的岗位" items={jobFacts} />
       <section className="personal-context"><h2>我的情况</h2><div>{personalFacts.map((fact) => <span key={fact}>{fact}</span>)}</div></section>
       <section className="shared-info-panel"><h2>提供给 AI 的信息</h2><p>选择你愿意用于这次分析的信息。</p><div>{shareOptions.map(([key, label]) => <label key={key} className={draft.sharedInfo.includes(key) ? 'selected' : ''}><input type="checkbox" checked={draft.sharedInfo.includes(key)} onChange={() => toggleSharedInfo(key)} />{label}</label>)}</div></section>
       <div className={`task-four-workspace ${draft.phase === 'ai_assist' ? 'with-ai' : ''}`}>

@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getSceneConfig } from '../../features/assessment/scene-config'
+import { getAllowedRoute, hasQuestionnaire } from '../../features/assessment/session-guards'
 import { useAssessmentStore } from '../../features/assessment/session-store'
 import type { SceneSubmission } from '../../features/assessment/types'
 import { TaskOneFlow } from './task-one-flow'
@@ -25,14 +26,18 @@ export function AssessmentClient({ step }: { step: number }) {
   useEffect(() => {
     if (!hydrated || !config) return
     startSession()
+    if (!session || !hasQuestionnaire(session, 'pre')) return
+    const allowed = getAllowedRoute(session)
+    if (allowed !== `/assessment/${step}`) { router.replace(allowed); return }
     startScene(config.id)
-  }, [config, hydrated, startScene, startSession])
+  }, [config, hydrated, router, session, step, startScene, startSession])
 
   useEffect(() => {
-    if (session && step > session.currentScene) router.replace(`/assessment/${session.currentScene}`)
+    if (session && !hasQuestionnaire(session, 'pre')) router.replace('/questionnaire/pre')
   }, [router, session, step])
 
   if (!config || !hydrated) return <main className="feedback-loading">正在读取进度…</main>
+  if (!session || !hasQuestionnaire(session, 'pre') || getAllowedRoute(session) !== `/assessment/${step}`) return <main className="feedback-loading">正在读取进度…</main>
   const scene = session?.scenes[config.id]
 
   if (!scene) return <main className="feedback-loading">正在准备任务…</main>
@@ -40,7 +45,7 @@ export function AssessmentClient({ step }: { step: number }) {
   const finish = (submission: SceneSubmission) => {
     recordEvent(config.id, 'submission_completed', { submission })
     submitScene(config.id, submission)
-    window.setTimeout(() => router.push(step === 4 ? '/analyzing' : `/assessment/${step + 1}`), 550)
+    router.push(step === 4 ? '/questionnaire/post' : `/assessment/${step + 1}`)
   }
 
   if (config.id === 'headphones') {
